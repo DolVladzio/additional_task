@@ -1,0 +1,18 @@
+version: '3'
+services:
+  server:
+    build:
+     context: ./java
+     dockerfile: Dockerfile
+    ports:
+     - "8080:8080"
+    container_name: java-2
+  ui:
+    build:
+     context: ./react
+     dockerfile: Dockerfile
+    ports:
+     - "3000:3000"
+    container_name: react-2
+    depends_on: 
+     - server
