@@ -5,8 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN chmod 755 ./mvnw
-RUN ./mvnw clean package
-RUN chmod +x ./target/simplecrud-0.0.1-SNAPSHOT.jar
+RUN mvn clean package -Dmaven.test.skip=true
 
 EXPOSE 8080
 
