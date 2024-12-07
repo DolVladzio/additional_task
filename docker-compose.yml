@@ -1,23 +1,29 @@
 version: '3'
 services:
-  server:
-    build:
-     context: ./java
-     dockerfile: Dockerfile
+  mysql:
+    image: mysql:8.0
     ports:
-     - "8080:8080"
-    environment:
-      db_user_name: sa
-      db_password: 
-    container_name: java
-  ui:
-    build:
-     context: ./react
-     dockerfile: Dockerfile
-    ports:
-     - "3000:3000"
-    environment:
-      server_db_url: jdbc:h2:file:./productsDB
-      server_db_user_name: sa
-      server_db_password: 
-    container_name: react
+      - "3306:3306"
+    environment: 
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: 
+
+  java:
+      build:
+        context: ./java
+        dockerfile: Dockerfile
+      ports:
+        - "8080:8080"
+      depends_on:
+        - mysql
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:h2:file:./productsDB
+        SPRING_DATASOURCE_USERNAME: sa
+        SPRING_DATASOURCE_PASSWORD: 
+
+  react:
+      build:
+        context: ./react
+        dockerfile: Dockerfile
+      ports:
+        - "3000:80"
