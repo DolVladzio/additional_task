@@ -1,27 +1,29 @@
 version: '3'
 services:
-  db:
-      image: 
-      ports: 
-        - ""
-      environment:
-        db_user: sa
-        db_password:
-  java:
-      build:
-        context: ./java
-        dockerfile: Dockerfile
-      ports:
-        - "8080:8080"
-      depends_on:
-        - db
-      environment:
-        db_url: jdbc:h2:file:./productsDB
-        db_user_name: sa
-        db_password:
-  react:
-      build:
-        context: ./react
-        dockerfile: Dockerfile
-      ports:
-        - "3000:3000"
+  java-backend:
+    build:
+      context: ./java
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:./productsDB
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+    depends_on:
+      - h2
+
+  frontend:
+    build:
+      context: ./react
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+
+  h2:
+    image: oscarfonts/h2
+    ports:
+      - "9092:9092"
+      - "8082:8082"
+    environment:
+      - H2_OPTIONS=-ifNotExists
